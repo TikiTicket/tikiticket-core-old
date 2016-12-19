@@ -1,8 +1,8 @@
-package com.veinhorn.tikiticket.core.impl;
+package com.veinhorn.tikiticket.core.test.impl;
 
-import com.veinhorn.tikiticket.core.Connector;
+import com.veinhorn.tikiticket.core.IConnector;
 import com.veinhorn.tikiticket.core.Pair;
-import com.veinhorn.tikiticket.core.RequestContext;
+import com.veinhorn.tikiticket.core.ResponseContext;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -19,17 +19,18 @@ import java.util.List;
 
 /**
  * Created by veinhorn on 17.12.16.
+ * It's a simple implementation of IConnector powered by Apache Http Client
  */
-public class CustomConnector implements Connector {
+public class HttpClientConnector implements IConnector {
     private CloseableHttpClient httpClient;
 
-    public CustomConnector(CloseableHttpClient httpClient) {
+    public HttpClientConnector(CloseableHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
-    @Override public RequestContext doGet(String url) throws IOException {
+    @Override public ResponseContext doGet(String url) throws IOException {
         final HttpGet httpGet = new HttpGet(url);
-        return new RequestContext() {
+        return new ResponseContext() {
             @Override public String getHtml() throws IOException {
                 return EntityUtils.toString(httpClient.execute(httpGet).getEntity());
             }
@@ -40,7 +41,7 @@ public class CustomConnector implements Connector {
         };
     }
 
-    @Override public RequestContext doPost(String url, List<Pair> pairs) throws IOException {
+    @Override public ResponseContext doPost(String url, List<Pair> pairs) throws IOException {
         final HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> nvps = new ArrayList<>();
         if (pairs != null) {
@@ -51,7 +52,7 @@ public class CustomConnector implements Connector {
         }
         final CloseableHttpResponse response = httpClient.execute(httpPost);
 
-        return new RequestContext() {
+        return new ResponseContext() {
             @Override public String getHtml() throws IOException {
                 return EntityUtils.toString(response.getEntity());
             }

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by veinhorn on 17.12.16.
  */
-public interface RequestContext {
+public interface ResponseContext {
     String getHtml() throws IOException;
     List<Pair> getHeaders();
 }

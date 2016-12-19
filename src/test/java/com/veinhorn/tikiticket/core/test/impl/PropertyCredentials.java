@@ -1,4 +1,4 @@
-package com.veinhorn.tikiticket.core.impl;
+package com.veinhorn.tikiticket.core.test.impl;
 
 import com.veinhorn.tikiticket.core.auth.ICredentials;
 

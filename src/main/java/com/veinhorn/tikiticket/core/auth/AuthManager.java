@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core.auth;
 
 import com.veinhorn.tikiticket.core.*;
+import com.veinhorn.tikiticket.core.util.PairUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -12,20 +13,20 @@ import java.io.IOException;
 public class AuthManager {
     private static final String LOGIN_PAGE_URL = "https://poezd.rw.by/wps/portal/home/login_main";
 
-    private Connector connector;
+    private IConnector connector;
 
-    public AuthManager(Connector connector) {
+    public AuthManager(IConnector connector) {
         this.connector = connector;
     }
 
     /** Here we should make 2 requests */
-    public RequestContext authenticate(ICredentials creds) throws IOException {
+    // TODO: Improve this part, maybe we should not redirect
+    public ResponseContext authenticate(ICredentials creds) throws IOException {
         String authUrl = new AuthUrlParser().parse(connector.doGet(LOGIN_PAGE_URL).getHtml());
 
-        RequestContext context1 = connector.doPost(authUrl, PairUtil.toPairs(creds)/*params*/);
-        String foundUrl = PairUtil.findPairByKey(context1.getHeaders(), "Location").getValue();
-        RequestContext context = connector.doGet(foundUrl);
-        return context;
+        ResponseContext context1 = connector.doPost(authUrl, PairUtil.toPairs(creds));
+        String redirectionUrl = PairUtil.findPairByKey(context1.getHeaders(), "Location").getValue();
+        return connector.doGet(redirectionUrl);
     }
 
     private class AuthUrlParser implements Parser<String> {

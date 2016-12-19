@@ -1,6 +1,6 @@
 package com.veinhorn.tikiticket.core.test
 
-import com.veinhorn.tikiticket.core.impl.PropertyCredentials
+import com.veinhorn.tikiticket.core.test.impl.PropertyCredentials
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
