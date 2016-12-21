@@ -1,7 +1,6 @@
 package com.veinhorn.tikiticket.core.util;
 
-import com.veinhorn.tikiticket.core.Constants;
-import com.veinhorn.tikiticket.core.Pair;
+import com.veinhorn.tikiticket.core.constant.Constants;
 import com.veinhorn.tikiticket.core.auth.ICredentials;
 
 import java.util.Arrays;

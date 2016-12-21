@@ -1,7 +1,7 @@
 package com.veinhorn.tikiticket.core.test.impl;
 
 import com.veinhorn.tikiticket.core.IConnector;
-import com.veinhorn.tikiticket.core.Pair;
+import com.veinhorn.tikiticket.core.util.Pair;
 import com.veinhorn.tikiticket.core.ResponseContext;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;

@@ -1,4 +1,4 @@
-package com.veinhorn.tikiticket.core;
+package com.veinhorn.tikiticket.core.constant;
 
 /**
  * Created by veinhorn on 18.12.16.
