@@ -1,8 +1,9 @@
 package com.veinhorn.tikiticket.core.test.impl;
 
 import com.veinhorn.tikiticket.core.IConnector;
-import com.veinhorn.tikiticket.core.util.Pair;
 import com.veinhorn.tikiticket.core.ResponseContext;
+import com.veinhorn.tikiticket.core.auth.ICredentials;
+import com.veinhorn.tikiticket.core.util.Pair;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -28,7 +29,13 @@ public class HttpClientConnector implements IConnector {
         this.httpClient = httpClient;
     }
 
-    @Override public ResponseContext doGet(String url) throws IOException {
+    @Override
+    public ICredentials getCredentials() {
+        return new PropertyCredentials();
+    }
+
+    @Override
+    public ResponseContext doGet(String url) throws IOException {
         final HttpGet httpGet = new HttpGet(url);
         return new ResponseContext() {
             @Override public String getHtml() throws IOException {
@@ -41,7 +48,8 @@ public class HttpClientConnector implements IConnector {
         };
     }
 
-    @Override public ResponseContext doPost(String url, List<Pair> pairs) throws IOException {
+    @Override
+    public ResponseContext doPost(String url, List<Pair> pairs) throws IOException {
         final HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> nvps = new ArrayList<>();
         if (pairs != null) {

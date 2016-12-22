@@ -1,5 +1,6 @@
 package com.veinhorn.tikiticket.core;
 
+import com.veinhorn.tikiticket.core.auth.ICredentials;
 import com.veinhorn.tikiticket.core.util.Pair;
 
 import java.io.IOException;
@@ -10,7 +11,10 @@ import java.util.List;
  * It's an interlayer between Manager business logic and HTTP layer, you should implement it using
  * some HTTP library
  */
+// TODO: Add credentials method, that will provide some credentials
 public interface IConnector {
     ResponseContext doGet(String url) throws IOException;
     ResponseContext doPost(String url, List<Pair> params) throws IOException;
+    /** Should provide credentials for auth requests */
+    ICredentials getCredentials();
 }

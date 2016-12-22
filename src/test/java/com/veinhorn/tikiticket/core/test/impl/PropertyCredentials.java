@@ -2,7 +2,6 @@ package com.veinhorn.tikiticket.core.test.impl;
 
 import com.veinhorn.tikiticket.core.auth.ICredentials;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
