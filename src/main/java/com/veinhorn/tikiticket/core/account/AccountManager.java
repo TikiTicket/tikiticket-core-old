@@ -2,6 +2,8 @@ package com.veinhorn.tikiticket.core.account;
 
 import com.veinhorn.tikiticket.core.IConnector;
 import com.veinhorn.tikiticket.core.ResponseContext;
+import com.veinhorn.tikiticket.core.api.IAccountManager;
+import com.veinhorn.tikiticket.core.api.IPersonalData;
 import com.veinhorn.tikiticket.core.auth.AuthManager;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 

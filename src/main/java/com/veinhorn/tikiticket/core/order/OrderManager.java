@@ -2,6 +2,8 @@ package com.veinhorn.tikiticket.core.order;
 
 import com.veinhorn.tikiticket.core.IConnector;
 import com.veinhorn.tikiticket.core.ResponseContext;
+import com.veinhorn.tikiticket.core.api.IOrder;
+import com.veinhorn.tikiticket.core.api.IOrderManager;
 import com.veinhorn.tikiticket.core.auth.AuthManager;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 

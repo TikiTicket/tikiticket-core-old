@@ -1,4 +1,4 @@
-package com.veinhorn.tikiticket.core.auth;
+package com.veinhorn.tikiticket.core.api;
 
 import com.veinhorn.tikiticket.core.ResponseContext;
 

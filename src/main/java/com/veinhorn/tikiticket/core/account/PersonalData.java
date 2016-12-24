@@ -1,5 +1,7 @@
 package com.veinhorn.tikiticket.core.account;
 
+import com.veinhorn.tikiticket.core.api.IPersonalData;
+
 /**
  * Created by veinhorn on 18.12.16.
  */

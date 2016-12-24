@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core.order;
 
 import com.veinhorn.tikiticket.core.DataParser;
+import com.veinhorn.tikiticket.core.api.IOrder;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

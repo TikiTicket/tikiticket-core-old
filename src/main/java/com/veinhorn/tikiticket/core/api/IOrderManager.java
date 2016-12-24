@@ -1,4 +1,4 @@
-package com.veinhorn.tikiticket.core.order;
+package com.veinhorn.tikiticket.core.api;
 
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 

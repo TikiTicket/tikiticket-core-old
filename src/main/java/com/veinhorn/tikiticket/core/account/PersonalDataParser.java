@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core.account;
 
 import com.veinhorn.tikiticket.core.DataParser;
+import com.veinhorn.tikiticket.core.api.IPersonalData;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

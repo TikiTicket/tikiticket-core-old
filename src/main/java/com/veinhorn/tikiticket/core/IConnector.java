@@ -1,6 +1,6 @@
 package com.veinhorn.tikiticket.core;
 
-import com.veinhorn.tikiticket.core.auth.ICredentials;
+import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.util.Pair;
 
 import java.io.IOException;

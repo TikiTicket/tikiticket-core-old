@@ -2,6 +2,8 @@ package com.veinhorn.tikiticket.core.auth;
 
 import com.veinhorn.tikiticket.core.IConnector;
 import com.veinhorn.tikiticket.core.ResponseContext;
+import com.veinhorn.tikiticket.core.api.IAuthManager;
+import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.util.PairUtil;
 
 import java.io.IOException;

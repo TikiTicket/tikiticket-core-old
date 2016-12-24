@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core.test.account
 
-import com.veinhorn.tikiticket.core.account.{AccountManager, IAccountManager}
+import com.veinhorn.tikiticket.core.account.AccountManager
+import com.veinhorn.tikiticket.core.api.IAccountManager
 import com.veinhorn.tikiticket.core.test.impl.HttpClientConnector
 import org.apache.http.impl.client.HttpClients
 import org.scalatest.FlatSpec

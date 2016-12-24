@@ -1,4 +1,4 @@
-package com.veinhorn.tikiticket.core.order;
+package com.veinhorn.tikiticket.core.api;
 
 /**
  * Created by veinhorn on 23.12.16.
