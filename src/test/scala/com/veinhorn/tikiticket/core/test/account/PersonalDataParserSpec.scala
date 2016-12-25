@@ -1,17 +1,14 @@
 package com.veinhorn.tikiticket.core.test.account
 
-import java.nio.file.{Files, Paths}
-
 import com.veinhorn.tikiticket.core.account.PersonalDataParser
-import org.scalatest.FlatSpec
+import com.veinhorn.tikiticket.core.test.ParserFlatSpec
 
 /**
   * Created by veinhorn on 21.12.16.
   */
-class PersonalDataParserSpec extends FlatSpec {
+class PersonalDataParserSpec extends ParserFlatSpec {
   it should "test personal data parser" in {
-    val html = new String(Files.readAllBytes(Paths.get("html/registration-data.html")))
-    val pData = new PersonalDataParser().parse(html)
+    val pData = new PersonalDataParser().parse(loadHtml("registration-data.html"))
     val ok = "ok"
   }
 }

@@ -5,4 +5,12 @@ package com.veinhorn.tikiticket.core.api;
  */
 public interface IOrder {
     String getOrderNumber();
+    String getOrderDate();
+    String getTripDate();
+    String getDispatchStation();
+    String getDestinationStation();
+    String getTrainNumber();
+    String getNumberOfSeats();
+    String getPrice();
+    String getEc();
 }
