@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface IOrderManager {
     List<IOrder> getCurrentOrders() throws TikiTicketException;
+    String getOrderDetails() throws TikiTicketException;
+    
 }

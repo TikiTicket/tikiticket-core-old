@@ -1,14 +1,14 @@
 package com.veinhorn.tikiticket.core.util;
 
-import com.veinhorn.tikiticket.core.constant.Constants;
 import com.veinhorn.tikiticket.core.api.ICredentials;
+import com.veinhorn.tikiticket.core.constant.Constants;
 
 import java.util.Arrays;
 import java.util.List;
 /**
  * Created by veinhorn on 18.12.16.
  */
-public class PairUtil {
+public class Util {
     public static Pair findPairByKey(List<Pair> pairs, String key) {
         for (Pair pair : pairs) {
             if (pair.getKey().equals(key))
@@ -26,5 +26,9 @@ public class PairUtil {
             );
         }
         return null;
+    }
+
+    public static String createUrl(String relativeUrl) {
+        return Constants.BASE_URL + relativeUrl;
     }
 }

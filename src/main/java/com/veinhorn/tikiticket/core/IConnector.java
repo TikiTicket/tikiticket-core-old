@@ -17,4 +17,7 @@ public interface IConnector {
     ResponseContext doPost(String url, List<Pair> params) throws IOException;
     /** Should provide credentials for auth requests */
     ICredentials getCredentials();
+    // TODO: Remove it
+    /** Experimental stuff, remove later */
+    ResponseContext doPost2(String url, String body) throws IOException;
 }

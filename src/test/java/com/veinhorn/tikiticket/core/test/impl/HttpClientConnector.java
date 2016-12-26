@@ -10,6 +10,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -75,6 +77,27 @@ public class HttpClientConnector implements IConnector {
                     }
                     return pairs;
                 }
+                return null;
+            }
+        };
+    }
+
+    // TODO: Remove this experimental stuff later
+    @Override
+    public ResponseContext doPost2(String url, String body) throws IOException {
+        final HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(new StringEntity(body));
+
+        final CloseableHttpResponse response = httpClient.execute(httpPost);
+
+        return new ResponseContext() {
+            @Override
+            public String getHtml() throws IOException {
+                return EntityUtils.toString(response.getEntity());
+            }
+
+            @Override
+            public List<Pair> getHeaders() {
                 return null;
             }
         };

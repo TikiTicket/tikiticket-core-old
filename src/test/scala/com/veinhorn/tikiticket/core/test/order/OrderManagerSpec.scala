@@ -16,5 +16,7 @@ class OrderManagerSpec extends FlatSpec {
     val orderManager: IOrderManager = new OrderManager(customConnector)
     val currentOrdes = orderManager.getCurrentOrders
     val ok = "ok"
+    /*val orderManager: IOrderManager = new OrderManager(customConnector)
+    val orderDetails = orderManager.getOrderDetails*/
   }
 }
