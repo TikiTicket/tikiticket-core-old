@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core.auth;
 
 import com.veinhorn.tikiticket.core.DataParser;
+import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 import com.veinhorn.tikiticket.core.util.Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,15 +11,13 @@ import org.jsoup.nodes.Document;
  */
 public class AuthUrlParser implements DataParser<String> {
     @Override
-    public String parse(String html) {
-        Document document = Jsoup.parse(html);
-        return Util.createUrl(document.getElementById("login").attr("action"));
-/*
-        return createAuthUrl(document.getElementById("login").attr("action"));
-*/
+    public String parse(String html) throws TikiTicketException {
+        try {
+            Document document = Jsoup.parse(html);
+            return Util.createUrl(document.getElementById("login").attr("action"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TikiTicketException("Cannot parse auth url", e);
+        }
     }
-
-    /*private String createAuthUrl(String url) {
-        return Constants.BASE_URL + url;
-    }*/
 }

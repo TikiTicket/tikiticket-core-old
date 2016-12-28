@@ -13,10 +13,15 @@ class OrderManagerSpec extends FlatSpec {
   val customConnector = new HttpClientConnector(HttpClients.createDefault())
 
   it should "test order manager" in {
-    val orderManager: IOrderManager = new OrderManager(customConnector)
-    val currentOrdes = orderManager.getCurrentOrders
-    val ok = "ok"
     /*val orderManager: IOrderManager = new OrderManager(customConnector)
-    val orderDetails = orderManager.getOrderDetails*/
+    val currentOrdes = orderManager.retrieveCurrentTrips
+    val ok = "ok"*/
+
+    /*val orderManager: IOrderManager = new OrderManager(customConnector)
+    val orderDetails = orderManager.retrieveTripDetails*/
+
+    val orderManager: IOrderManager = new OrderManager(customConnector)
+    val res = orderManager.retrieveCompletedTrips(null, null)
+    val ok = "ok"
   }
 }
