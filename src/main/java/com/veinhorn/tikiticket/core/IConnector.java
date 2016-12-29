@@ -1,6 +1,7 @@
 package com.veinhorn.tikiticket.core;
 
 import com.veinhorn.tikiticket.core.api.ICredentials;
+import com.veinhorn.tikiticket.core.context.ContextHolder;
 import com.veinhorn.tikiticket.core.util.Pair;
 
 import java.io.IOException;
@@ -15,9 +16,13 @@ import java.util.List;
 public interface IConnector {
     ResponseContext doGet(String url) throws IOException;
     ResponseContext doPost(String url, List<Pair> params) throws IOException;
+
     /** Should provide credentials for auth requests */
     ICredentials getCredentials();
-    // TODO: Remove it
-    /** Experimental stuff, remove later */
-    ResponseContext doPost2(String url, String body) throws IOException;
+
+    /**
+     *
+     * @return
+     */
+    ContextHolder getContextHolder();
 }

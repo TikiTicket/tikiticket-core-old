@@ -7,16 +7,16 @@ import com.veinhorn.tikiticket.core.account.CompletedTripsUrlParser;
 import com.veinhorn.tikiticket.core.api.IOrder;
 import com.veinhorn.tikiticket.core.api.IOrderManager;
 import com.veinhorn.tikiticket.core.auth.AuthManager;
+import com.veinhorn.tikiticket.core.context.ContextEvent;
+import com.veinhorn.tikiticket.core.context.ContextHolder;
+import com.veinhorn.tikiticket.core.context.ContextState;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 import com.veinhorn.tikiticket.core.util.Pair;
 import com.veinhorn.tikiticket.core.util.Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +25,6 @@ import java.util.List;
  * Created by veinhorn on 22.12.16.
  */
 public class OrderManager implements IOrderManager {
-    // dlya vtorogo zaprosa
-    private String body = "sort_hidden_id=sort&sort_hidden_order=sortdescon&sort_hidden_id=sort2&sort_hidden_order=sortdescon&sort_hidden_id=sort3&sort_hidden_order=sortdescon&sort_hidden_id=sort4&sort_hidden_order=sortdescon&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AcabOrderList1%3A0%3Acm=5345506&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AcabOrderList1%3A1%3Acm=5345480&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AcabOrderList1%3ApagerWeb1__pagerWeb=0&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3Alanguage1=ru&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AselForNewOrderId1=&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AselForNewOrderDate1=&com.sun.faces.VIEW=_id58643%3A_id58644&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2=viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2&viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3A_idcl=viewns_7_48QFVAUK6PT510AGU3KRAG1004_%3Aform2%3AcabOrderList1%3A1%3A_id71&rownum=1";
-
     private static final String PERSONAL_ACCOUNT_URL = "https://poezd.rw.by/wps/myportal/home/rp/private";
 
     private IConnector connector;
@@ -41,6 +38,7 @@ public class OrderManager implements IOrderManager {
     @Override
     public List<IOrder> retrieveCurrentTrips() throws TikiTicketException {
         try {
+            // TODO: Do not authenticate here
             ResponseContext context = authManager.authenticate(connector.getCredentials());
             String html = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
             return new CurrentOrdersParser().parse(html);
@@ -54,22 +52,44 @@ public class OrderManager implements IOrderManager {
     }
 
     @Override
-    public String retrieveTripDetails() throws TikiTicketException {
+    public String retrieveTripDetails(IOrder order) throws TikiTicketException {
         try {
-            ResponseContext context = authManager.authenticate(connector.getCredentials());
+            ContextHolder ctx = connector.getContextHolder();
+
+            String str;
+            // If we already on completed trips page, we can just get this HTML page
+            if (ctx.isAuthorized() && ctx.getState() == ContextState.COMPLETED_TRIPS) {
+                Document document = Jsoup.parse(ctx.getLastHtml());
+
+                // String lastHtml = ctx.getLastHtml();
+                String relativeUrl = document.getElementsByTag("form").get(1).attr("action");
+                String url = Util.createUrl(relativeUrl);
+                String ids = document.getElementById("com.sun.faces.VIEW").val();
+
+                connector.doPost(url, Arrays.asList(
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2")
+                ));
+                str = "yo";
+            } else {
+                str = "none";
+                ResponseContext c = authManager.authenticate(connector.getCredentials());
+                connector.doGet("");
+            }
+            return str;
+            /*ResponseContext context = authManager.authenticate(connector.getCredentials());
             String html = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
             Document document = Jsoup.parse(html);
             String relativeUrl = document.getElementsByTag("form").get(1).attr("action");
             String detailsUrl = Util.createUrl(relativeUrl);
-            /*String res = connector.doPost(detailsUrl, Arrays.asList(
+            String res = connector.doPost(detailsUrl, Arrays.asList(
                     new Pair("", ""),
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:pagerWeb1__pagerWeb", "0"),
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2"),
                     new Pair("com.sun.faces.VIEW", "id58627:_id58628"),
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:_idcl", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:0:_id71"),
-                    new Pair("rownum", "0"))).getHtml();*/
+                    new Pair("rownum", "0"))).getHtml();
             String res = connector.doPost2(detailsUrl, body).getHtml();
-            return "ok";
+            return "ok";*/
         } catch (IOException e) {
             e.printStackTrace();
             throw new TikiTicketException("Cannot parse detail order info", e);
@@ -83,10 +103,10 @@ public class OrderManager implements IOrderManager {
             String personalAccHtml = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
 
             String completedTripsUrl = new CompletedTripsUrlParser().parse(personalAccHtml);
-            String html = connector.doGet(completedTripsUrl).getHtml();
+            String completedTripsHtml = connector.doGet(completedTripsUrl).getHtml();
 
-            List<String> parsedData = new CompletedTripsUrl2Parser().parse(html);
-            String html2 = connector.doPost(parsedData.get(0), Arrays.asList(
+            List<String> parsedData = new CompletedTripsUrl2Parser().parse(completedTripsHtml);
+            String fetchedOrdersHtml = connector.doPost(parsedData.get(0), Arrays.asList(
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form1:calendar1", ""),
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form1:calendar1", ""),
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form1:inputArrivalStationCombo1", ""),
@@ -96,9 +116,20 @@ public class OrderManager implements IOrderManager {
                     new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form1", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form1")
             )).getHtml();
 
-            Element element = Jsoup.parse(html2).getElementsByClass("information").get(0);
+            List<IOrder> orders = new CurrentOrdersParser().parse(fetchedOrdersHtml);
 
-            return new ArrayList<>();
+            // Update context state
+            connector.getContextHolder().updateContext(new ContextEvent() {
+                @Override public ContextState getState() {
+                    return ContextState.COMPLETED_TRIPS;
+                }
+
+                @Override public String getLastHtml() {
+                    return fetchedOrdersHtml;
+                }
+            });
+
+            return orders;
         } catch (IOException e) {
             e.printStackTrace();
             throw new TikiTicketException("Cannot retrieve completed trips", e);
