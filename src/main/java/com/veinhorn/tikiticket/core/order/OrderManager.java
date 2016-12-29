@@ -66,30 +66,24 @@ public class OrderManager implements IOrderManager {
                 String url = Util.createUrl(relativeUrl);
                 String ids = document.getElementById("com.sun.faces.VIEW").val();
 
-                connector.doPost(url, Arrays.asList(
-                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2")
-                ));
+                // TODO: Replace static form values with dynamic
+                String detailsHtml = connector.doPost(url, Arrays.asList(
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:pagerWeb1__pagerWeb", ""),
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:selForNewOrderId1", ""),
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:selForNewOrderDate1", ""),
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2"),
+                        new Pair("com.sun.faces.VIEW", ids),
+                        new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:_idcl", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:0:_id71"),
+                        new Pair("rownum", "0")
+                )).getHtml();
                 str = "yo";
-            } else {
+            } else { // TODO: Implement this branch
                 str = "none";
                 ResponseContext c = authManager.authenticate(connector.getCredentials());
                 connector.doGet("");
             }
+
             return str;
-            /*ResponseContext context = authManager.authenticate(connector.getCredentials());
-            String html = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
-            Document document = Jsoup.parse(html);
-            String relativeUrl = document.getElementsByTag("form").get(1).attr("action");
-            String detailsUrl = Util.createUrl(relativeUrl);
-            String res = connector.doPost(detailsUrl, Arrays.asList(
-                    new Pair("", ""),
-                    new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:pagerWeb1__pagerWeb", "0"),
-                    new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2"),
-                    new Pair("com.sun.faces.VIEW", "id58627:_id58628"),
-                    new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:_idcl", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:0:_id71"),
-                    new Pair("rownum", "0"))).getHtml();
-            String res = connector.doPost2(detailsUrl, body).getHtml();
-            return "ok";*/
         } catch (IOException e) {
             e.printStackTrace();
             throw new TikiTicketException("Cannot parse detail order info", e);
