@@ -12,4 +12,8 @@ public class TikiTicketException extends Exception {
         this.original = original;
         this.message = message;
     }
+
+    public Throwable getOriginal() {
+        return original;
+    }
 }

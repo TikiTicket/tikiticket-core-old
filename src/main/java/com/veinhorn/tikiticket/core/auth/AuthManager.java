@@ -12,6 +12,7 @@ import java.io.IOException;
 /**
  * Created by veinhorn on 17.12.16.
  */
+@Deprecated
 public class AuthManager implements IAuthManager {
     private static final String LOGIN_PAGE_URL = "https://poezd.rw.by/wps/portal/home/login_main";
 

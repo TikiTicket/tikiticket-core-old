@@ -5,6 +5,7 @@ import com.veinhorn.tikiticket.core.context.ContextHolder;
 /**
  * Created by veinhorn on 29.12.16.
  */
+@Deprecated
 public abstract class Connector implements IConnector {
     private ContextHolder contextHolder;
 

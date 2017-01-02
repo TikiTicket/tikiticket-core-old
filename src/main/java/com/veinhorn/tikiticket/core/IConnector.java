@@ -24,5 +24,6 @@ public interface IConnector {
      *
      * @return
      */
+    @Deprecated
     ContextHolder getContextHolder();
 }
