@@ -20,6 +20,7 @@ public class CurrentOrdersParser implements DataParser<List<IOrder>> {
         try {
             return parse(Jsoup.parse(html));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new TikiTicketException("Cannot parse current orders", e);
         }
     }
