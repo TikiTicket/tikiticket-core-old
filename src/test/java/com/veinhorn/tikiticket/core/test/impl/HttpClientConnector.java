@@ -1,8 +1,9 @@
 package com.veinhorn.tikiticket.core.test.impl;
 
-import com.veinhorn.tikiticket.core.Connector;
+import com.veinhorn.tikiticket.core.IConnector;
 import com.veinhorn.tikiticket.core.ResponseContext;
 import com.veinhorn.tikiticket.core.api.ICredentials;
+import com.veinhorn.tikiticket.core.context.ContextHolder;
 import com.veinhorn.tikiticket.core.util.Pair;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
@@ -23,12 +24,18 @@ import java.util.List;
  * It's a simple implementation of IConnector powered by Apache Http Client
  * Every connector instance should include context holder
  */
-public class HttpClientConnector extends Connector {
+public class HttpClientConnector implements IConnector {
     private CloseableHttpClient httpClient;
+    private ContextHolder contextHolder;
 
     public HttpClientConnector(CloseableHttpClient httpClient) {
-        super();
         this.httpClient = httpClient;
+        contextHolder = new ContextHolder();
+    }
+
+    @Override
+    public ContextHolder getContextHolder() {
+        return contextHolder;
     }
 
     @Override

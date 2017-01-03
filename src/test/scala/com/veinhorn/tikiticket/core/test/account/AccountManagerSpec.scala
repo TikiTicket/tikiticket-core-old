@@ -6,6 +6,8 @@ import com.veinhorn.tikiticket.core.test.impl.HttpClientConnector
 import org.apache.http.impl.client.HttpClients
 import org.scalatest.FlatSpec
 
+import scala.collection.mutable
+
 /**
   * Created by veinhorn on 18.12.16.
   */
@@ -14,7 +16,8 @@ class AccountManagerSpec extends FlatSpec {
 
   it should "test account manager" in {
     val accountManager: IAccountManager = new AccountManager(customConnector)
-    val personalData = accountManager.getPersonalData()
+    val list = mutable.MutableList(accountManager.getPersonalData())
+    (1 to 3).foreach { _ => list += accountManager.getPersonalData }
     val ok = "ok"
   }
 }

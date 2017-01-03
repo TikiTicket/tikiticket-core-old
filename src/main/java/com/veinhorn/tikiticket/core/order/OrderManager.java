@@ -1,12 +1,12 @@
 package com.veinhorn.tikiticket.core.order;
 
+import com.veinhorn.tikiticket.core.BaseManager;
 import com.veinhorn.tikiticket.core.IConnector;
-import com.veinhorn.tikiticket.core.ResponseContext;
 import com.veinhorn.tikiticket.core.account.CompletedTripsUrl2Parser;
 import com.veinhorn.tikiticket.core.account.CompletedTripsUrlParser;
 import com.veinhorn.tikiticket.core.api.IOrder;
+import com.veinhorn.tikiticket.core.api.IOrderDetails;
 import com.veinhorn.tikiticket.core.api.IOrderManager;
-import com.veinhorn.tikiticket.core.auth.AuthManager;
 import com.veinhorn.tikiticket.core.context.ContextEvent;
 import com.veinhorn.tikiticket.core.context.ContextHolder;
 import com.veinhorn.tikiticket.core.context.ContextState;
@@ -17,6 +17,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -24,20 +25,17 @@ import java.util.List;
 /**
  * Created by veinhorn on 22.12.16.
  */
-public class OrderManager implements IOrderManager {
+public class OrderManager extends BaseManager implements IOrderManager {
     private static final String PERSONAL_ACCOUNT_URL = "https://poezd.rw.by/wps/myportal/home/rp/private";
 
-    private IConnector connector;
-    private AuthManager authManager;
-
     public OrderManager(IConnector connector) {
-        this.connector = connector;
-        authManager = new AuthManager(connector);
+        super(connector);
     }
 
     @Override
     public List<IOrder> retrieveCurrentTrips() throws TikiTicketException {
-        try {
+        return new ArrayList<IOrder>();
+        /*try {
             // TODO: Do not authenticate here
             ResponseContext context = authManager.authenticate(connector.getCredentials());
             String html = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
@@ -48,17 +46,17 @@ public class OrderManager implements IOrderManager {
         } catch (TikiTicketException e) {
             e.printStackTrace();
             throw e;
-        }
+        }*/
     }
 
     @Override
-    public String retrieveTripDetails(IOrder order) throws TikiTicketException {
+    public IOrderDetails retrieveTripDetails(IOrder order) throws TikiTicketException {
         try {
             ContextHolder ctx = connector.getContextHolder();
 
             String str;
             // If we already on completed trips page, we can just get this HTML page
-            if (ctx.isAuthorized() && ctx.getState() == ContextState.COMPLETED_TRIPS) {
+            if (ctx.getState() == ContextState.COMPLETED_TRIPS) {
                 Document document = Jsoup.parse(ctx.getLastHtml());
 
                 // String lastHtml = ctx.getLastHtml();
@@ -76,14 +74,27 @@ public class OrderManager implements IOrderManager {
                         new Pair("viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:_idcl", "viewns_7_48QFVAUK6PT510AGU3KRAG1004_:form2:cabOrderList1:0:_id71"),
                         new Pair("rownum", "0")
                 )).getHtml();
-                str = "yo";
+                IOrderDetails tripDetails = new OrderDetailsParser().parse(detailsHtml);
+                // Here we should update event
+                connector.getContextHolder().updateContext(new ContextEvent() {
+                    @Override
+                    public ContextState getState() {
+                        return ContextState.TRIP_DETAILS;
+                    }
+
+                    @Override
+                    public String getLastHtml() {
+                        return detailsHtml;
+                    }
+                });
+
+                return tripDetails;
             } else { // TODO: Implement this branch
                 str = "none";
-                ResponseContext c = authManager.authenticate(connector.getCredentials());
                 connector.doGet("");
             }
 
-            return str;
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
             throw new TikiTicketException("Cannot parse detail order info", e);
@@ -93,7 +104,6 @@ public class OrderManager implements IOrderManager {
     @Override
     public List<IOrder> retrieveCompletedTrips(Date start, Date finish) throws TikiTicketException {
         try {
-            ResponseContext context = authManager.authenticate(connector.getCredentials());
             String personalAccHtml = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
 
             String completedTripsUrl = new CompletedTripsUrlParser().parse(personalAccHtml);

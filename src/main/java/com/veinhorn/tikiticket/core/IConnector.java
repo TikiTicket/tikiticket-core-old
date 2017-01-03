@@ -15,6 +15,7 @@ import java.util.List;
 // TODO: Add credentials method, that will provide some credentials
 public interface IConnector {
     ResponseContext doGet(String url) throws IOException;
+
     ResponseContext doPost(String url, List<Pair> params) throws IOException;
 
     /** Should provide credentials for auth requests */
@@ -24,6 +25,5 @@ public interface IConnector {
      *
      * @return
      */
-    @Deprecated
     ContextHolder getContextHolder();
 }

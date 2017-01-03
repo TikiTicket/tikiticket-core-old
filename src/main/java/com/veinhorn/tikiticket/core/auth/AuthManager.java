@@ -22,8 +22,6 @@ public class AuthManager implements IAuthManager {
         this.connector = connector;
     }
 
-    /** Here we should make 2 requests */
-    // TODO: Improve this part, maybe we should not redirect
     public ResponseContext authenticate(ICredentials creds) throws TikiTicketException {
         try {
             String authUrl = new AuthUrlParser().parse(connector.doGet(LOGIN_PAGE_URL).getHtml());

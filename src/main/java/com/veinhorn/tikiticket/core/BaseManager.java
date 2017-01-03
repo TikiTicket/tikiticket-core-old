@@ -2,7 +2,9 @@ package com.veinhorn.tikiticket.core;
 
 import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.auth.AuthUrlParser;
+import com.veinhorn.tikiticket.core.context.ContextEvent;
 import com.veinhorn.tikiticket.core.context.ContextHolder;
+import com.veinhorn.tikiticket.core.context.ContextState;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
 import com.veinhorn.tikiticket.core.util.Pair;
 import com.veinhorn.tikiticket.core.util.Util;
@@ -12,32 +14,51 @@ import java.util.List;
 
 /**
  * Created by veinhorn on 2.1.17.
+ * Base manager should be used as a basis for all manager implementations
  */
-abstract class BaseManager {
+public abstract class BaseManager {
     protected IConnector connector;
 
     protected BaseManager(IConnector connector) {
-        this.connector = connector;
+        this.connector = new AuthConnector(connector);
     }
 
-    /** It's like a proxy, using decorator pattern */
+    /**
+     * Decorator, based on regular IConnector interface, used as a proxy before
+     * any GET/POST request, should check if we already authenticated
+     */
     private class AuthConnector implements IConnector {
         private static final String LOGIN_PAGE_URL = "https://poezd.rw.by/wps/portal/home/login_main";
 
         private IConnector connector;
         private ContextHolder ctx;
 
-        public AuthConnector(IConnector connector) {
+        AuthConnector(IConnector connector) {
             this.connector = connector;
-            ctx = new ContextHolder();
+            ctx = this.connector.getContextHolder();
         }
 
-        /** It's clever auth */
+        /** Check if we already authenticated */
         private void authenticate() throws IOException {
-            if (!ctx.isAuthorized()) authenticate(getCredentials());
+            if (ctx.isAuthorized()) {
+                System.out.println("Already authenticated");
+            } else {
+                System.out.println("Regular authentication");
+                ResponseContext authCtx = authenticate(getCredentials());
+                String lastHtml = authCtx.getHtml();
+                ctx.updateContext(new ContextEvent() {
+                    @Override public ContextState getState() {
+                        return ContextState.AUTHENTICATED;
+                    }
+
+                    @Override public String getLastHtml() {
+                        return lastHtml;
+                    }
+                });
+            }
         }
 
-        /** It's basic auth */
+        /** Regular authentication through web page */
         private ResponseContext authenticate(ICredentials creds) throws IOException {
             try {
                 String authUrl = new AuthUrlParser().parse(connector.doGet(LOGIN_PAGE_URL).getHtml());

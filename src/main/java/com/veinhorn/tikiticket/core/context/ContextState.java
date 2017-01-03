@@ -7,5 +7,6 @@ public enum ContextState {
     UNKNOWN,
     AUTHENTICATED,
     PERSONAL_ACCOUNT,
-    COMPLETED_TRIPS
+    COMPLETED_TRIPS,
+    TRIP_DETAILS
 }

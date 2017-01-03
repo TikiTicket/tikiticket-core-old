@@ -21,7 +21,7 @@ public interface IOrderManager {
      * @return
      * @throws TikiTicketException
      */
-    String retrieveTripDetails(IOrder order) throws TikiTicketException;
+    IOrderDetails retrieveTripDetails(IOrder order) throws TikiTicketException;
 
     /**
      * Retrieve completed trips from start to finish dates, or all completed trips if range

@@ -32,7 +32,7 @@ public class ContextHolder implements IContextHolder {
 
     @Override
     public boolean isAuthorized() {
-        return ((System.currentTimeMillis() - modified) / 1000L < MAX_TIME);
+        return modified != 0 && ((System.currentTimeMillis() - modified) / 1000L < MAX_TIME);
     }
 
     @Override
