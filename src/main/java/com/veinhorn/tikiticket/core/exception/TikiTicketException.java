@@ -7,6 +7,11 @@ public class TikiTicketException extends Exception {
     private Throwable original;
     private String message;
 
+    public TikiTicketException(String message) {
+        super(message);
+        this.message = message;
+    }
+
     public TikiTicketException(String message, Throwable original) {
         super(message, original);
         this.original = original;

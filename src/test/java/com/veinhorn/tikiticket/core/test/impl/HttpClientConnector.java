@@ -45,12 +45,13 @@ public class HttpClientConnector implements IConnector {
 
     @Override
     public ResponseContext doGet(String url) throws IOException {
-        final HttpGet httpGet = new HttpGet(url);
+        CloseableHttpResponse response = httpClient.execute(new HttpGet(url));
         return new ResponseContext() {
             @Override public String getHtml() throws IOException {
-                return EntityUtils.toString(httpClient.execute(httpGet).getEntity());
+                return EntityUtils.toString(response.getEntity());
             }
 
+            // TODO: Return headers from GET response
             @Override public List<Pair> getHeaders() {
                 return null;
             }
