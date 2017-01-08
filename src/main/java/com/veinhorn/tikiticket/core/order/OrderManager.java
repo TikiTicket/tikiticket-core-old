@@ -17,7 +17,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -34,19 +33,28 @@ public class OrderManager extends BaseManager implements IOrderManager {
 
     @Override
     public List<IOrder> retrieveCurrentTrips() throws TikiTicketException {
-        return new ArrayList<IOrder>();
-        /*try {
-            // TODO: Do not authenticate here
-            ResponseContext context = authManager.authenticate(connector.getCredentials());
+        try {
             String html = connector.doGet(PERSONAL_ACCOUNT_URL).getHtml();
-            return new CurrentOrdersParser().parse(html);
+            List<IOrder> currentTrips = new CurrentOrdersParser().parse(html);
+
+            connector.getContextHolder().updateContext(new ContextEvent() {
+                @Override public ContextState getState() {
+                    return ContextState.CURRENT_TRIPS;
+                }
+
+                @Override public String getLastHtml() {
+                    return html;
+                }
+            });
+
+            return currentTrips;
         } catch (IOException e) {
             e.printStackTrace();
             throw new TikiTicketException("Cannot parse current orders", e);
         } catch (TikiTicketException e) {
             e.printStackTrace();
             throw e;
-        }*/
+        }
     }
 
     @Override
