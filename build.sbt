@@ -1,5 +1,5 @@
 name := "tikiticket-core"
-version := "0.01"
+version := "0.02"
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= {
@@ -10,3 +10,7 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest" % "3.0.1" % "test"
   )
 }
+
+// disable using Scala versions in jar name
+crossPaths := false
+
