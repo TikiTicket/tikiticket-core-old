@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 /**
  * Created by veinhorn on 18.12.16.
+ * Utility class with useful util methods
  */
 public class Util {
     public static Pair findPairByKey(List<Pair> pairs, String key) {
@@ -30,5 +31,20 @@ public class Util {
 
     public static String createUrl(String relativeUrl) {
         return Constants.BASE_URL + relativeUrl;
+    }
+
+    /** Creates ICredentials from passed login and password */
+    public static ICredentials newCredentials(String login, String password) {
+        return new ICredentials() {
+            @Override
+            public String getLogin() {
+                return login;
+            }
+
+            @Override
+            public String getPassword() {
+                return password;
+            }
+        };
     }
 }
