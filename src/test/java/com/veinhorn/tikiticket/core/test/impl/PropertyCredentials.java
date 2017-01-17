@@ -8,6 +8,7 @@ import java.util.Properties;
 /**
  * Created by veinhorn on 18.12.16.
  */
+// TODO: Implement in Scala
 public class PropertyCredentials implements ICredentials {
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";

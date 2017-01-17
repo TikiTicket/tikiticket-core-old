@@ -1,13 +1,13 @@
 package com.veinhorn.tikiticket.core.api;
 
-import com.veinhorn.tikiticket.core.ResponseContext;
-import com.veinhorn.tikiticket.core.exception.TikiTicketException;
-
-import java.io.IOException;
-
 /**
  * Created by veinhorn on 21.12.16.
+ * Provides authentication possibilities
  */
 public interface IAuthManager {
-    ResponseContext authenticate(ICredentials creds) throws TikiTicketException;
+    /**
+     * Checks that provided credentials are valid
+     * @return true if provided credentials are valid, otherwise false
+     */
+    boolean isValidCredentials(ICredentials creds);
 }

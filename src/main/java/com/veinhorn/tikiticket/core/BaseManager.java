@@ -12,6 +12,8 @@ import com.veinhorn.tikiticket.core.util.Util;
 import java.io.IOException;
 import java.util.List;
 
+import static com.veinhorn.tikiticket.core.constant.Constants.LOGIN_PAGE_URL;
+
 /**
  * Created by veinhorn on 2.1.17.
  * Base manager should be used as a basis for all manager implementations
@@ -28,8 +30,6 @@ public abstract class BaseManager {
      * any GET/POST request, should check if we already authenticated
      */
     private class AuthConnector implements IConnector {
-        private static final String LOGIN_PAGE_URL = "https://poezd.rw.by/wps/portal/home/login_main";
-
         private IConnector connector;
         private ContextHolder ctx;
 
@@ -58,7 +58,8 @@ public abstract class BaseManager {
             }
         }
 
-        /** Regular authentication through web page */
+        /** Regular authentication through web page. We shouldn't add
+         *  IOException handling here */
         private ResponseContext authenticate(ICredentials creds) throws IOException {
             try {
                 String authUrl = new AuthUrlParser().parse(connector.doGet(LOGIN_PAGE_URL).getHtml());
@@ -66,7 +67,7 @@ public abstract class BaseManager {
                 ResponseContext context1 = connector.doPost(authUrl, Util.toPairs(creds));
                 String redirectionUrl = Util.findPairByKey(context1.getHeaders(), "Location").getValue();
                 return connector.doGet(redirectionUrl);
-            } catch (TikiTicketException e) {
+            } catch (TikiTicketException e) { // back conversion TikiExc -> IOExc for compatibility
                 e.printStackTrace();
                 throw new IOException();
             }

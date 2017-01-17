@@ -5,33 +5,41 @@ import com.veinhorn.tikiticket.core.ResponseContext;
 import com.veinhorn.tikiticket.core.api.IAuthManager;
 import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.exception.TikiTicketException;
+import com.veinhorn.tikiticket.core.util.Pair;
 import com.veinhorn.tikiticket.core.util.Util;
 
 import java.io.IOException;
 
+import static com.veinhorn.tikiticket.core.constant.Constants.LOGIN_PAGE_URL;
+
 /**
  * Created by veinhorn on 17.12.16.
+ * IAuthManager implementation
  */
-@Deprecated
 public class AuthManager implements IAuthManager {
-    private static final String LOGIN_PAGE_URL = "https://poezd.rw.by/wps/portal/home/login_main";
-
     private IConnector connector;
 
     public AuthManager(IConnector connector) {
         this.connector = connector;
     }
 
-    public ResponseContext authenticate(ICredentials creds) throws TikiTicketException {
+    @Override
+    public boolean isValidCredentials(ICredentials creds) {
         try {
             String authUrl = new AuthUrlParser().parse(connector.doGet(LOGIN_PAGE_URL).getHtml());
-
-            ResponseContext context1 = connector.doPost(authUrl, Util.toPairs(creds));
-            String redirectionUrl = Util.findPairByKey(context1.getHeaders(), "Location").getValue();
-            return connector.doGet(redirectionUrl);
+            ResponseContext ctx = connector.doPost(authUrl, Util.toPairs(creds));
+            Pair locationPair = Util.findPairByKey(ctx.getHeaders(), "Location");
+            // Check that Location header exists
+            if (locationPair == null) return false;
+            String redirectionUrl = locationPair.getValue();
+            ResponseContext context = connector.doGet(redirectionUrl);
+            return true;
+        } catch (TikiTicketException e) {
+            e.printStackTrace();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
-            throw new TikiTicketException("Cannot make auth request", e);
+            return false;
         }
     }
 }

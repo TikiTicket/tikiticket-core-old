@@ -1,5 +1,6 @@
 package com.veinhorn.tikiticket.core.util;
 
+import com.sun.istack.internal.Nullable;
 import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.constant.Constants;
 
@@ -10,6 +11,10 @@ import java.util.List;
  * Utility class with useful util methods
  */
 public class Util {
+    /**
+     * Tries to find pair by such key
+     * @return pair if it's exist or null
+     */
     public static Pair findPairByKey(List<Pair> pairs, String key) {
         for (Pair pair : pairs) {
             if (pair.getKey().equals(key))
