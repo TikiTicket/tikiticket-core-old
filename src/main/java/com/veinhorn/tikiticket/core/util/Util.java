@@ -1,6 +1,5 @@
 package com.veinhorn.tikiticket.core.util;
 
-import com.sun.istack.internal.Nullable;
 import com.veinhorn.tikiticket.core.api.ICredentials;
 import com.veinhorn.tikiticket.core.constant.Constants;
 
