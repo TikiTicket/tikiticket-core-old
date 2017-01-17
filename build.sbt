@@ -1,5 +1,5 @@
 name := "tikiticket-core"
-version := "0.02"
+version := "0.03"
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= {
